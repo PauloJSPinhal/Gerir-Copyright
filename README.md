@@ -12,12 +12,14 @@ Esta aplicação permite adicionar metadados de direitos autorais em imagens usa
 
 ## ✨ Funcionalidades
 
-- ✅ Adicionar/editar autoria em múltiplas imagens simultaneamente
+- ✅ Atualizar múltiplos metadados simultaneamente (Artist, Creator, By-line, Copyright)
 - ✅ Detecção automática de autor e ano existentes
 - ✅ Validação para garantir que todas as imagens sejam do mesmo ano
 - ✅ Confirmação antes de alterar autor existente
-- ✅ Notificações desktop após operações bem-sucedidas
-- ✅ Avisos para formatos com suporte limitado a metadados
+- ✅ Verificação de metadados já atualizados (pula arquivos sem alterações)
+- ✅ Formato de copyright: "(c) <Autor> (<Ano>). Todos os direitos reservados."
+- ✅ Interface GTK com melhor gerenciamento de janelas
+- ✅ Mensagens de sucesso e erro com detalhes
 
 ## 🖥️ Requisitos do Sistema
 
@@ -25,8 +27,8 @@ Esta aplicação permite adicionar metadados de direitos autorais em imagens usa
 - **Python**: 3.7+
 - **Bibliotecas**:
   - `python3-gi` (GTK 3 bindings)
-  - `exiftool` (meta dados)
-  - `notify-send` (notificações desktop)
+  - `exiftool` (metadados)
+  - `notify-send` (notificações desktop - opcional)
 
 ### Instalação de Dependências
 
@@ -37,17 +39,13 @@ sudo apt install python3-gi exiftool libnotify-bin
 
 ## 📦 Formatos Suportados
 
-### ✅ Formatos Recomendados (Suporte Universal)
 - JPEG / JPG
 - TIFF / TIF
 - HEIC / HEIF
 - DNG
+- RAW: CR2, CR3
 
-### ⚠️ Formatos com Limitações
-- RAW: CR2, CR3, NEF, ARW, ORF, RAF, RW2, PEF
-- Outros: PNG, WebP
-
-> **Nota**: Para formatos RAW e alguns outros, pode ser necessário criar arquivos `.xmp` laterais para que alguns editores reconheçam as alterações.
+> **Nota**: O script atualiza os metadados diretamente no arquivo, sem necessidade de arquivos `.xmp` laterais.
 
 ## 🚀 Como Usar
 
@@ -78,17 +76,20 @@ python3 gerir_copyright.py /caminho/para/pasta
 python3 gerir_copyright.py foto1.jpg pasta/ foto2.jpeg
 ```
 
+> **Nota**: O script atualiza automaticamente os campos Artist, Creator, By-line e Copyright com o formato: "(c) <Autor> (<Ano>). Todos os direitos reservados."
+
 ## 🛠️ Desenvolvimento
 
 ### Estrutura do Projeto
 
 ```
-photo-copyright-manager.py
+gerir_copyright.py
 └── Gerencia autorias em imagens
-    ├── collect_images()     # Coleta arquivos de imagem
-    ├── get_metadata()       # Lê metadados exiftool
-    ├── show_dialog()        # Interface GTK para edição
-    └── apply_authorship()   # Grava metadados
+    ├── collect_images()       # Coleta arquivos de imagem
+    ├── get_metadata_fast()    # Lê metadados exiftool (Artist, Creator, By-line, Copyright)
+    ├── show_main_dialog()     # Interface GTK para edição
+    ├── apply_authorship()     # Atualiza metadados (Artist, Creator, By-line, Copyright)
+    └── quit_app()             # Termina o loop GTK
 ```
 
 ### Contribuindo
